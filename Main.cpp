@@ -560,19 +560,45 @@ int main()
 		}
 
 		window.clear();
-		window.draw(board.getboard());
-		for (int i = 0; i < tiles.size(); i++) {
-			window.draw(tiles[i]->getshape());
+		Sprite MenuScreen;
+		Sprite Play;
+		Sprite Quit;
+		Texture Menu, play, quit;
+
+		Menu.loadFromFile("Texture/Menu.png");
+		play.loadFromFile("Texture/Start.png");
+		quit.loadFromFile("Texture/Quit.png");
+
+		Play.setPosition({ 800, 600 });
+		Quit.setPosition({ 800, 740 });
+
+		MenuScreen.setTexture(Menu);
+		if (currState == STATES::START) {
+			window.draw(Play);
+			window.draw(Quit);
+			window.draw(MenuScreen);
 		}
-		if (select == true) {
-			window.draw(marker.getsprite());
+
+		else if (currState == STATES::P1SET || currState == STATES::P2SET || currState == STATES::GAME) {
+			window.draw(board.getboard());
+			for (int i = 0; i < tiles.size(); i++) {
+				window.draw(tiles[i]->getshape());
+			}
+			if (select == true) {
+				window.draw(marker.getsprite());
+			}
+			for (int i = 0; i < vAlliedPieces.size(); i++) {
+				window.draw(vAlliedPieces[i]->getsprite());
+			}
+			for (PIECE* x : vEnemyPieces) {
+				window.draw(x->getsprite());
+			}
 		}
-		for (int i = 0; i < vAlliedPieces.size(); i++) {
-			window.draw(vAlliedPieces[i]->getsprite());
+
+		else {
+
 		}
-		for (PIECE* x : vEnemyPieces) {
-			window.draw(x->getsprite());
-		}
+		
 		window.display();
 	}
 
