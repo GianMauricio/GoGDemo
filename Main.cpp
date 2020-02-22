@@ -46,7 +46,7 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 	//Player 1 setup
 	if (*currState == STATES::P1SET) {
 		for(PIECE* x : Enemies){
-			x->setInivisble();
+			x->setInvisble();
 		}
 
 		if (event->type == sf::Event::MouseButtonReleased && event->key.code == Mouse::Left && (*select == false)) {
@@ -94,7 +94,7 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 	//Player 2 Setup
 	if (*currState == STATES::P2SET) {
 		for (PIECE* x : Allies) {
-			x->setInivisble();
+			x->setInvisble();
 		}
 
 		for (PIECE* x : Enemies) {
@@ -143,6 +143,13 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 	//Game proper
 	if (*currState == STATES::GAME) {
 		if (*turn == 0)/*Player 1 turn*/ {
+			for (PIECE* x : Enemies) {
+				x->setInvisble();
+			}
+
+			for (PIECE* x : Allies) {
+				x->setVisible();
+			}
 			if (event->type == sf::Event::MouseButtonReleased && event->key.code == Mouse::Left && (*select == false)) {
 				//Select the piece that was clicked
 				for (int i = 0; i < Allies.size(); i++) {
@@ -197,7 +204,7 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 
 									else if (Allies[*selectindex]->getvalue() == 1 && Enemies[i]->getvalue() == 14) /*Private eats spy*/ {
 										cout << "Killed Spy" << endl;
-										Enemies[*selectindex]->setInivisble();
+										Enemies[*selectindex]->setInvisble();
 										Enemies[*selectindex]->setposition(tiles[*deadEnemies]->getposition());
 										(*deadEnemies)++;
 
@@ -209,7 +216,7 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 
 									else if (Allies[*selectindex]->getvalue() > Enemies[i]->getvalue())/*Normal eat*/ {
 										cout << "Kill" << endl;
-										Enemies[i]->setInivisble();
+										Enemies[i]->setInvisble();
 										Enemies[*selectindex]->setposition(tiles[*deadEnemies]->getposition());
 										(*deadEnemies)++;
 
@@ -233,6 +240,13 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 		}
 
 		else if (*turn == 1)/*Player 2 turn*/ {
+			for (PIECE* x : Allies) {
+				x->setInvisble();
+			}
+
+			for (PIECE* x : Enemies) {
+				x->setVisible();
+			}
 			if (event->type == sf::Event::MouseButtonReleased && event->key.code == Mouse::Left && (*select == false)) {
 				//Select the piece that was clicked
 				for (int i = 0; i < Enemies.size(); i++) {
@@ -280,28 +294,28 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 									//Attempt to eat
 									if (Enemies[*selectindex]->getvalue() == 14 && Allies[i]->getvalue() == 1)/*Spy gets eaten*/  {
 										cout << "Lost spy" << endl;
-										Enemies[*selectindex]->setInivisble();
+										Enemies[*selectindex]->setInvisble();
 										Enemies[*selectindex]->setposition(tiles[*deadEnemies]->getposition());
 										(*deadEnemies)++;
 									}
 
 									else if (Enemies[*selectindex]->getvalue() == 1 && Allies[i]->getvalue() == 14) /*Private eats spy*/ {
 										cout << "Killed spy" << endl;
-										Allies[*selectindex]->setInivisble();
+										Allies[*selectindex]->setInvisble();
 										Allies[*selectindex]->setposition(tiles[*deadAllies]->getposition());
 										(*deadAllies)++;
 									}
 
 									else if (Enemies[*selectindex]->getvalue() > Allies[i]->getvalue())/*Normal eat*/ {
 										cout << "Kill" << endl;
-										Allies[i]->setInivisble();
+										Allies[i]->setInvisble();
 										Allies[*selectindex]->setposition(tiles[*deadAllies]->getposition());
 										(*deadAllies)++;
 									}
 
 									else if (Enemies[*selectindex]->getvalue() < Allies[i]->getvalue())/*Normal get eaten*/ {
 										cout << "Death" << endl;
-										Enemies[i]->setInivisble();
+										Enemies[i]->setInvisble();
 										Enemies[*selectindex]->setposition(tiles[*deadEnemies]->getposition());
 										(*deadEnemies)++;
 									}
@@ -333,6 +347,22 @@ int main()
 	vector <PIECE*> vAlliedPieces;/*Allied Pieces*/
 	vector <PIECE*> vEnemyPieces;/*Enemy Pieces*/
 	STATES currState = STATES::START;
+
+	Sprite MenuScreen;
+	Sprite Play;
+	Sprite Quit;
+	Texture Menu, play, quit;
+
+	Menu.loadFromFile("Texture/Menu.png");
+	play.loadFromFile("Texture/Start.png");
+	quit.loadFromFile("Texture/Quit.png");
+
+	Play.setPosition({ 800, 600 });
+	Quit.setPosition({ 800, 740 });
+
+	MenuScreen.setTexture(Menu);
+	Play.setTexture(play);
+	Quit.setTexture(quit);
 
 	int tilecounter = 0;
 	float x = 10;
@@ -560,23 +590,11 @@ int main()
 		}
 
 		window.clear();
-		Sprite MenuScreen;
-		Sprite Play;
-		Sprite Quit;
-		Texture Menu, play, quit;
-
-		Menu.loadFromFile("Texture/Menu.png");
-		play.loadFromFile("Texture/Start.png");
-		quit.loadFromFile("Texture/Quit.png");
-
-		Play.setPosition({ 800, 600 });
-		Quit.setPosition({ 800, 740 });
-
-		MenuScreen.setTexture(Menu);
+		
 		if (currState == STATES::START) {
+			window.draw(MenuScreen);
 			window.draw(Play);
 			window.draw(Quit);
-			window.draw(MenuScreen);
 		}
 
 		else if (currState == STATES::P1SET || currState == STATES::P2SET || currState == STATES::GAME) {
