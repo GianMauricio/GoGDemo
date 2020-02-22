@@ -39,11 +39,16 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 		}
 	}
 
+	if (*currState == STATES::START) {
+
+	}
+
 	//Player 1 setup
 	if (*currState == STATES::P1SET) {
 		for(PIECE* x : Enemies){
 			x->setInivisble();
 		}
+
 		if (event->type == sf::Event::MouseButtonReleased && event->key.code == Mouse::Left && (*select == false)) {
 			//Select the piece that was clicked
 			for (int i = 0; i < Allies.size(); i++) {
@@ -88,6 +93,13 @@ void processEvents(Event* event, MARKER* marker, vector<TILE*> tiles, vector<PIE
 
 	//Player 2 Setup
 	if (*currState == STATES::P2SET) {
+		for (PIECE* x : Allies) {
+			x->setInivisble();
+		}
+
+		for (PIECE* x : Enemies) {
+			x->setVisible();
+		}
 		if (event->type == sf::Event::MouseButtonReleased && event->key.code == Mouse::Left && (*select == false)) {
 			//Select the piece that was clicked
 			for (int i = 0; i < Enemies.size(); i++) {
